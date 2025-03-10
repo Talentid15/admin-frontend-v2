@@ -116,16 +116,16 @@ const isOfferPunchActive = location.pathname === "/offer-punch";
             </NavLink>
 
             <NavLink
-              to="/usermanagement"
+              to="/teammanagement"
               className={({ isActive }) =>
                 isActive
                   ? "flex items-center space-x-4 px-4 py-6 bg-purple-400  shadow-md"
                   : "flex items-center space-x-4 px-4 py-6 hover:text-black hover:bg-[#E8DEF8] bg-opacity-95  transition-all duration-200"
               }
-              onClick={() => setSelectedNav("Offer Intelligence")}
+              onClick={() => setSelectedNav("Team Management")}
             >
               <SiLens className="h-5 w-5" />
-              <span className="text-sm font-medium">User management</span>
+              <span className="text-sm font-medium">Team management</span>
             </NavLink>
 
             <NavLink

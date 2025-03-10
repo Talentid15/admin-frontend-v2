@@ -24,7 +24,7 @@ function App() {
             <Route path="/subscriptions" element={<Subscriptions />} />
             <Route path="/todo" element={<ToDo />} />
             <Route path="/notepad" element={<Notepad />} />
-            <Route path="/usermanagement" element={<User_M />} />
+            <Route path="/teammanagement" element={<User_M />} />
 
             <Route path="/extractInfo" element={<ExtractDataFromPdf />} />
           </Route>
