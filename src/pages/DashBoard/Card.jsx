@@ -2,8 +2,8 @@ import { FaCircle } from "react-icons/fa6";
 
 const Card = ({ title, value, statusColor, iconColor }) => {
   return (
-    <div className="flex items-center justify-center p-6 py-8 bg-white border-opacity-25 text-white border-blue-900  rounded-3xl shadow-lg hover:shadow-xl transition duration-300 border-2 hover:scale-105  w-[250px] h-[150px] group">
-      <div className="text-center w-[200px] h-[100px]">
+    <div className="flex items-center text-center justify-center p-6 py-8 bg-white border-opacity-25 text-white border-blue-900  rounded-3xl shadow-lg hover:shadow-xl transition duration-300 border-2 hover:scale-105  w-[250px] h-[100px] group">
+      <div className="text-center w-[200px] h-[100px] mt-5">
         <h2 className="text-lg font-semibold text-black text-center">
           {title}
         </h2>

@@ -5,6 +5,10 @@ import BarChart from "./MultiLineChart";
 import ActivityBar from "./ActivityBar";
 import Card from './Card'
 
+import DashboardGraphs from "./DashboardGraphs ";
+import RecentUser from "./RecentUser";
+import DisplayToDo from "./DisplayToDo";
+
 const stats = [
   { title: "Total Users", value: "680/1000", statusColor: "text-green-300", iconColor: "#4CAF50" },
   { title: "New Users", value: "38", statusColor: "text-white", iconColor: "#2196F3" },
@@ -42,6 +46,17 @@ const DashBoard = () => {
             <div className="flex-[0.3]">
               <ActivityBar />
             </div>
+          </div>
+          <div className="mt-8 grid grid-cols-1 lg:grid-cols-2 gap-5">
+            <div className="flex-[0.5]">
+              <DisplayToDo />
+            </div>
+            <div className="flex-[0.5]">
+              <RecentUser />
+            </div>
+          </div>
+          <div>
+            <DashboardGraphs/>
           </div>
 
           {/* Outlet Section */}
