@@ -1,9 +1,7 @@
 import React, { useState } from "react";
-import AddUserModal from "/src/components/settings/AddUserModal.jsx"; // Import the modal
-import { FaPencilAlt } from "react-icons/fa";
+import { FaPencilAlt, FaSearch } from "react-icons/fa";
 
 const UserManagement = () => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [users, setUsers] = useState([
     {
       id: 1,
@@ -54,6 +52,8 @@ const UserManagement = () => {
     role: true,
   });
 
+  const [searchTerm, setSearchTerm] = useState("");
+
   // Handle input change
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -72,7 +72,6 @@ const UserManagement = () => {
     };
 
     setUsers([...users, newUser]); // Add new user to table
-    setIsModalOpen(false); // Close modal
     setFormData({ firstName: "", lastName: "", email: "", role: true }); // Reset form
   };
 
@@ -81,22 +80,36 @@ const UserManagement = () => {
     setUsers(users.filter((user) => user.id !== id));
   };
 
- 
+  // Handle search
+  const handleSearch = (e) => {
+    setSearchTerm(e.target.value);
+  };
+
+  // Filter users based on search term
+  const filteredUsers = users.filter((user) =>
+    user.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   return (
     <div className="w-full max-w-5xl mx-auto mt-10 p-4 bg-white rounded-xl shadow-lg">
-      {/* <div className="flex justify-end items-end mb-4">
-        <button
-          onClick={() => setIsModalOpen(true)}
-          className="bg-gray-200 hover:bg-gray-300 text-black font-medium px-4 py-2 rounded-full"
-        >
-          Add users +
-        </button>
-      </div> */}
+      <div className="flex justify-end items-center mb-4">
+       
+        <div className="relative ">
+          <input
+            type="text"
+            placeholder="Search "
+            value={searchTerm}
+            onChange={handleSearch}
+            className="pl-10 pr-4 py-2 border-b rounded-lg "
+          />
+          <FaSearch className="absolute left-3 top-3 text-gray-400" />
+        </div>
+      </div>
 
       <div className="overflow-x-auto hidden md:block">
         <table className="w-full bg-white rounded-lg">
           <thead>
-            <tr className="border-b ">
+            <tr className="border-b">
               <th className="p-3 text-left">Name</th>
               <th className="p-3 text-left">Phone Number</th>
               <th className="p-3 text-left">Email</th>
@@ -106,7 +119,7 @@ const UserManagement = () => {
             </tr>
           </thead>
           <tbody>
-            {users.map((user) => (
+            {filteredUsers.map((user) => (
               <tr key={user.id} className="border-b">
                 <td className="p-3">{user.name}</td>
                 <td className="p-3">{user.phone}</td>
@@ -114,9 +127,18 @@ const UserManagement = () => {
                 <td className="p-3 text-center">{user.role}</td>
                 <td className="p-3">{user.date}</td>
                 <td className="p-2 flex items-center space-x-3">
-                  <button className="bg-white px-3 py-1 rounded-full"><FaPencilAlt /></button>
-                  <button onClick={() => handleDelete(user.id)} className="text-red-600 text-xl">🗑</button>
-                  <button className="bg-gray-300 px-3 py-1 rounded-full">View More</button>
+                  <button className="bg-white px-3 py-1 rounded-full">
+                    <FaPencilAlt />
+                  </button>
+                  <button
+                    onClick={() => handleDelete(user.id)}
+                    className="text-red-600 text-xl"
+                  >
+                    🗑
+                  </button>
+                  <button className="bg-gray-300 px-3 py-1 rounded-full">
+                    View More
+                  </button>
                 </td>
               </tr>
             ))}
@@ -124,32 +146,34 @@ const UserManagement = () => {
         </table>
       </div>
       <div className="block md:hidden">
-        {users.map((user) => (
-          <div key={user.id} className="mb-4 p-4 border rounded-lg shadow-md bg-gray-50">
+        {filteredUsers.map((user) => (
+          <div
+            key={user.id}
+            className="mb-4 p-4 border rounded-lg shadow-md bg-gray-50"
+          >
             <p className="font-semibold text-lg">{user.name}</p>
             <p className="text-gray-600">{user.email}</p>
             <p className="text-gray-500">
-              <span className="px-2 py-1 bg-gray-200 rounded-full">{user.role}</span>
+              <span className="px-2 py-1 bg-gray-200 rounded-full">
+                {user.role}
+              </span>
             </p>
             <p className="text-sm text-gray-400">{user.date}</p>
             <div className="mt-2 flex space-x-2">
               <button className="bg-gray-300 px-3 py-1 rounded-full">Edit</button>
-              <button onClick={() => handleDelete(user.id)} className="text-red-600">🗑</button>
-              <button className="bg-gray-300 px-3 py-1 rounded-full">View More</button>
+              <button
+                onClick={() => handleDelete(user.id)}
+                className="text-red-600"
+              >
+                🗑
+              </button>
+              <button className="bg-gray-300 px-3 py-1 rounded-full">
+                View More
+              </button>
             </div>
-
           </div>
         ))}
       </div>
-
-      {/* Add User Modal */}
-      <AddUserModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        onSave={handleSave}
-        formData={formData}
-        handleChange={handleChange}
-      />
     </div>
   );
 };
