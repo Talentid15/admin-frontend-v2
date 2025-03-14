@@ -1,89 +1,47 @@
 import React, { useState } from "react";
-import { FaPencilAlt, FaSearch } from "react-icons/fa";
+import { FaSearch } from "react-icons/fa";
 
 const UserManagement = () => {
   const [users, setUsers] = useState([
-    {
-      id: 1,
-      name: "Jainayak N",
-      phone: "1234567890",
-      email: "jai@talentid.app",
-      role: "Enterprise",
-      date: "Jan 8, 2025",
-    },
-    {
-      id: 2,
-      name: "Jainayak N",
-      phone: "1234567890",
-      email: "jai@talentid.app",
-      role: "Scale",
-      date: "Jan 8, 2025",
-    },
-    {
-      id: 3,
-      name: "Jainayak N",
-      phone: "1234567890",
-      email: "jai@talentid.app",
-      role: "Starter",
-      date: "Jan 8, 2025",
-    },
-    {
-      id: 4,
-      name: "Jainayak N",
-      phone: "1234567890",
-      email: "jai@talentid.app",
-      role: "Enterprise",
-      date: "Jan 8, 2025",
-    },
-    {
-      id: 5,
-      name: "Jainayak N",
-      phone: "1234567890",
-      email: "jai@talentid.app",
-      role: "Scale",
-      date: "Jan 8, 2025",
-    },
+    { id: 1, name: "Jainayak N", phone: "1234567890", email: "jai@talentid.app", role: "Enterprise", date: "Jan 8, 2025" },
+    { id: 2, name: "Jainayak N", phone: "1234567890", email: "jai@talentid.app", role: "Scale", date: "Jan 8, 2025" },
+    { id: 3, name: "Jainayak N", phone: "1234567890", email: "jai@talentid.app", role: "Starter", date: "Jan 8, 2025" },
+    { id: 4, name: "Jainayak N", phone: "1234567890", email: "jai@talentid.app", role: "Enterprise", date: "Jan 8, 2025" },
+    { id: 5, name: "Jainayak N", phone: "1234567890", email: "jai@talentid.app", role: "Scale", date: "Jan 8, 2025" },
   ]);
 
-  const [formData, setFormData] = useState({
-    firstName: "",
-    lastName: "",
-    email: "",
-    role: true,
-  });
-
   const [searchTerm, setSearchTerm] = useState("");
+  const [editing, setEditing] = useState(null);
+  const [editValue, setEditValue] = useState("");
 
-  // Handle input change
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+  // Handle search
+  const handleSearch = (e) => setSearchTerm(e.target.value);
+
+  // Handle double-click to start editing
+  const handleDoubleClick = (id, field, value) => {
+    setEditing({ id, field });
+    setEditValue(value);
   };
 
-  // Handle adding user
+  // Handle input change
+  const handleChange = (e) => setEditValue(e.target.value);
+
+  // Handle saving on enter or blur
   const handleSave = () => {
-    if (!formData.firstName || !formData.lastName || !formData.email) return;
+    if (!editing) return;
 
-    const newUser = {
-      id: users.length + 1,
-      name: `${formData.firstName} ${formData.lastName}`,
-      email: formData.email,
-      role: formData.role,
-      date: new Date().toDateString(),
-    };
+    setUsers((prevUsers) =>
+      prevUsers.map((user) =>
+        user.id === editing.id ? { ...user, [editing.field]: editValue } : user
+      )
+    );
 
-    setUsers([...users, newUser]); // Add new user to table
-    setFormData({ firstName: "", lastName: "", email: "", role: true }); // Reset form
+    setEditing(null);
+    setEditValue("");
   };
 
   // Handle user deletion
-  const handleDelete = (id) => {
-    setUsers(users.filter((user) => user.id !== id));
-  };
-
-  // Handle search
-  const handleSearch = (e) => {
-    setSearchTerm(e.target.value);
-  };
+  const handleDelete = (id) => setUsers(users.filter((user) => user.id !== id));
 
   // Filter users based on search term
   const filteredUsers = users.filter((user) =>
@@ -92,20 +50,21 @@ const UserManagement = () => {
 
   return (
     <div className="w-full max-w-5xl mx-auto mt-10 p-4 bg-white rounded-xl shadow-lg">
+      {/* Search Bar */}
       <div className="flex justify-end items-center mb-4">
-       
-        <div className="relative ">
+        <div className="relative">
           <input
             type="text"
-            placeholder="Search "
+            placeholder="Search"
             value={searchTerm}
             onChange={handleSearch}
-            className="pl-10 pr-4 py-2 border-b rounded-lg "
+            className="pl-10 pr-4 py-2 border-b rounded-lg"
           />
           <FaSearch className="absolute left-3 top-3 text-gray-400" />
         </div>
       </div>
 
+      {/* Table */}
       <div className="overflow-x-auto hidden md:block">
         <table className="w-full bg-white rounded-lg">
           <thead>
@@ -113,7 +72,7 @@ const UserManagement = () => {
               <th className="p-3 text-left">Name</th>
               <th className="p-3 text-left">Phone Number</th>
               <th className="p-3 text-left">Email</th>
-              <th className="p-3 text-left pl-10">Status</th>
+              <th className="p-3 text-left pl-10">Role</th>
               <th className="p-3 text-left">Date Added</th>
               <th className="p-3 text-left pl-8">Actions</th>
             </tr>
@@ -121,58 +80,100 @@ const UserManagement = () => {
           <tbody>
             {filteredUsers.map((user) => (
               <tr key={user.id} className="border-b">
-                <td className="p-3">{user.name}</td>
-                <td className="p-3">{user.phone}</td>
-                <td className="p-3">{user.email}</td>
-                <td className="p-3 text-center">{user.role}</td>
+                {/* Editable Name */}
+                <td
+                  className="p-3 cursor-pointer"
+                  onDoubleClick={() => handleDoubleClick(user.id, "name", user.name)}
+                >
+                  {editing?.id === user.id && editing?.field === "name" ? (
+                    <input
+                      type="text"
+                      value={editValue}
+                      onChange={handleChange}
+                      onBlur={handleSave}
+                      onKeyDown={(e) => e.key === "Enter" && handleSave()}
+                      autoFocus
+                      className="border rounded px-2 py-1 w-full"
+                    />
+                  ) : (
+                    user.name
+                  )}
+                </td>
+
+                {/* Editable Phone */}
+                <td
+                  className="p-3 cursor-pointer"
+                  onDoubleClick={() => handleDoubleClick(user.id, "phone", user.phone)}
+                >
+                  {editing?.id === user.id && editing?.field === "phone" ? (
+                    <input
+                      type="text"
+                      value={editValue}
+                      onChange={handleChange}
+                      onBlur={handleSave}
+                      onKeyDown={(e) => e.key === "Enter" && handleSave()}
+                      autoFocus
+                      className="border rounded px-2 py-1 w-full"
+                    />
+                  ) : (
+                    user.phone
+                  )}
+                </td>
+
+                {/* Editable Email */}
+                <td
+                  className="p-3 cursor-pointer"
+                  onDoubleClick={() => handleDoubleClick(user.id, "email", user.email)}
+                >
+                  {editing?.id === user.id && editing?.field === "email" ? (
+                    <input
+                      type="text"
+                      value={editValue}
+                      onChange={handleChange}
+                      onBlur={handleSave}
+                      onKeyDown={(e) => e.key === "Enter" && handleSave()}
+                      autoFocus
+                      className="border rounded px-2 py-1 w-full"
+                    />
+                  ) : (
+                    user.email
+                  )}
+                </td>
+
+                {/* Editable Role */}
+                <td
+                  className="p-3 cursor-pointer text-center "
+                  onDoubleClick={() => handleDoubleClick(user.id, "role", user.role)}
+                >
+                  {editing?.id === user.id && editing?.field === "role" ? (
+                    <input
+                      type="text"
+                      value={editValue}
+                      onChange={handleChange}
+                      onBlur={handleSave}
+                      onKeyDown={(e) => e.key === "Enter" && handleSave()}
+                      autoFocus
+                      className="border rounded px-2 py-1 w-[50%]"
+                    />
+                  ) : (
+                    user.role
+                  )}
+                </td>
+
+                {/* Date */}
                 <td className="p-3">{user.date}</td>
+
+                {/* Actions */}
                 <td className="p-2 flex items-center space-x-3">
-                  <button className="bg-white px-3 py-1 rounded-full">
-                    <FaPencilAlt />
-                  </button>
-                  <button
-                    onClick={() => handleDelete(user.id)}
-                    className="text-red-600 text-xl"
-                  >
+                  <button onClick={() => handleDelete(user.id)} className="text-red-600 text-xl">
                     🗑
                   </button>
-                  <button className="bg-gray-300 px-3 py-1 rounded-full">
-                    View More
-                  </button>
+                  <button className="bg-gray-300 px-3 py-1 rounded-full">View More</button>
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
-      </div>
-      <div className="block md:hidden">
-        {filteredUsers.map((user) => (
-          <div
-            key={user.id}
-            className="mb-4 p-4 border rounded-lg shadow-md bg-gray-50"
-          >
-            <p className="font-semibold text-lg">{user.name}</p>
-            <p className="text-gray-600">{user.email}</p>
-            <p className="text-gray-500">
-              <span className="px-2 py-1 bg-gray-200 rounded-full">
-                {user.role}
-              </span>
-            </p>
-            <p className="text-sm text-gray-400">{user.date}</p>
-            <div className="mt-2 flex space-x-2">
-              <button className="bg-gray-300 px-3 py-1 rounded-full">Edit</button>
-              <button
-                onClick={() => handleDelete(user.id)}
-                className="text-red-600"
-              >
-                🗑
-              </button>
-              <button className="bg-gray-300 px-3 py-1 rounded-full">
-                View More
-              </button>
-            </div>
-          </div>
-        ))}
       </div>
     </div>
   );

@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import AddUserModal from "/src/components/settings/AddUserModal.jsx"; // Import the modal
-import { FaPencilAlt } from "react-icons/fa";
 
 const UserManagement = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -10,7 +9,7 @@ const UserManagement = () => {
       name: "Jainayak N",
       phone: "1234567890",
       email: "jai@talentid.app",
-      role: "Admin",
+      status: "closed",
       date: "Jan 8, 2025",
     },
     {
@@ -18,7 +17,7 @@ const UserManagement = () => {
       name: "Jainayak N",
       phone: "1234567890",
       email: "jai@talentid.app",
-      role: "Admin",
+      status: "pending",
       date: "Jan 8, 2025",
     },
     {
@@ -26,7 +25,7 @@ const UserManagement = () => {
       name: "Jainayak N",
       phone: "1234567890",
       email: "jai@talentid.app",
-      role: true,
+      status: "open",
       date: "Jan 8, 2025",
     },
     {
@@ -34,131 +33,144 @@ const UserManagement = () => {
       name: "Jainayak N",
       phone: "1234567890",
       email: "jai@talentid.app",
-      role: true,
-      date: "Jan 8, 2025",
-    },
-    {
-      id: 5,
-      name: "Jainayak N",
-      phone: "1234567890",
-      email: "jai@talentid.app",
-      role: true,
+      status: "closed",
       date: "Jan 8, 2025",
     },
   ]);
 
-  const [formData, setFormData] = useState({
-    firstName: "",
-    lastName: "",
-    email: "",
-    role: true,
-  });
+  const [editingUser, setEditingUser] = useState(null);
+  const [editedValue, setEditedValue] = useState("");
 
-  // Handle input change
+  const handleDoubleClick = (id, field, value) => {
+    setEditingUser({ id, field });
+    setEditedValue(value);
+  };
+
+  const handleStatusChange = (id, newStatus) => {
+    setUsers((prevUsers) =>
+      prevUsers.map((user) =>
+        user.id === id ? { ...user, status: newStatus } : user
+      )
+    );
+  };
+
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    setEditedValue(e.target.value);
   };
 
-  // Handle adding user
-  const handleSave = () => {
-    if (!formData.firstName || !formData.lastName || !formData.email) return;
-
-    const newUser = {
-      id: users.length + 1,
-      name: `${formData.firstName} ${formData.lastName}`,
-      email: formData.email,
-      role: formData.role,
-      date: new Date().toDateString(),
-    };
-
-    setUsers([...users, newUser]); // Add new user to table
-    setIsModalOpen(false); // Close modal
-    setFormData({ firstName: "", lastName: "", email: "", role: true }); // Reset form
+  const handleBlurOrEnter = (id, field) => {
+    setUsers((prevUsers) =>
+      prevUsers.map((user) =>
+        user.id === id ? { ...user, [field]: editedValue } : user
+      )
+    );
+    setEditingUser(null);
   };
 
-  // Handle user deletion
   const handleDelete = (id) => {
     setUsers(users.filter((user) => user.id !== id));
   };
 
- 
   return (
     <div className="w-full max-w-5xl mx-auto mt-10 p-4 bg-white rounded-xl shadow-lg">
-      {/* <div className="flex justify-end items-end mb-4">
-        <button
-          onClick={() => setIsModalOpen(true)}
-          className="bg-gray-200 hover:bg-gray-300 text-black font-medium px-4 py-2 rounded-full"
-        >
-          Add users +
-        </button>
-      </div> */}
-
       <div className="overflow-x-auto hidden md:block">
         <table className="w-full bg-white rounded-lg">
           <thead>
-            <tr className="border-b ">
+            <tr className="border-b">
               <th className="p-3 text-left">Name</th>
               <th className="p-3 text-left">Phone Number</th>
               <th className="p-3 text-left">Email</th>
               <th className="p-3 text-left pl-10">Status</th>
               <th className="p-3 text-left">Date Added</th>
-              <th className="p-3 text-left pl-8">Actions</th>
+              <th className="p-3 text-left">Actions</th>
             </tr>
           </thead>
           <tbody>
             {users.map((user) => (
               <tr key={user.id} className="border-b">
-                <td className="p-3">{user.name}</td>
-                <td className="p-3">{user.phone}</td>
-                <td className="p-3">{user.email}</td>
+                <td
+                  className="p-3 cursor-pointer"
+                  onDoubleClick={() => handleDoubleClick(user.id, "name", user.name)}
+                >
+                  {editingUser?.id === user.id && editingUser.field === "name" ? (
+                    <input
+                      type="text"
+                      value={editedValue}
+                      onChange={handleChange}
+                      onBlur={() => handleBlurOrEnter(user.id, "name")}
+                      onKeyDown={(e) => e.key === "Enter" && handleBlurOrEnter(user.id, "name")}
+                      autoFocus
+                      className="border rounded px-2 py-1"
+                    />
+                  ) : (
+                    user.name
+                  )}
+                </td>
+                <td
+                  className="p-3 cursor-pointer"
+                  onDoubleClick={() => handleDoubleClick(user.id, "phone", user.phone)}
+                >
+                  {editingUser?.id === user.id && editingUser.field === "phone" ? (
+                    <input
+                      type="text"
+                      value={editedValue}
+                      onChange={handleChange}
+                      onBlur={() => handleBlurOrEnter(user.id, "phone")}
+                      onKeyDown={(e) => e.key === "Enter" && handleBlurOrEnter(user.id, "phone")}
+                      autoFocus
+                      className="border rounded px-2 py-1"
+                    />
+                  ) : (
+                    user.phone
+                  )}
+                </td>
+                <td
+                  className="p-3 cursor-pointer"
+                  onDoubleClick={() => handleDoubleClick(user.id, "email", user.email)}
+                >
+                  {editingUser?.id === user.id && editingUser.field === "email" ? (
+                    <input
+                      type="text"
+                      value={editedValue}
+                      onChange={handleChange}
+                      onBlur={() => handleBlurOrEnter(user.id, "email")}
+                      onKeyDown={(e) => e.key === "Enter" && handleBlurOrEnter(user.id, "email")}
+                      autoFocus
+                      className="border rounded px-2 py-1"
+                    />
+                  ) : (
+                    user.email
+                  )}
+                </td>
                 <td className="p-3 text-center">
                   <select
                     value={user.status}
                     onChange={(e) => handleStatusChange(user.id, e.target.value)}
-                    className="bg-gray-200 rounded-full px-2 py-1"
+                    className={`rounded-full px-2 py-1 text-white font-medium
+                      ${user.status === "open" ? "bg-green-500" : ""}
+                      ${user.status === "pending" ? "bg-yellow-500" : ""}
+                      ${user.status === "closed" ? "bg-red-500" : ""}
+                    `}
                   >
-                    <option value="open">Open</option>
-                    <option value="pending">Pending</option>
-                    <option value="closed">Closed</option>
+                    <option value="open" className="text-black">Open</option>
+                    <option value="pending" className="text-black">Pending</option>
+                    <option value="closed" className="text-black">Closed</option>
                   </select>
                 </td>
+
                 <td className="p-3">{user.date}</td>
                 <td className="p-2 flex items-center space-x-3">
-                  <button className="bg-white px-3 py-1 rounded-full"><FaPencilAlt /></button>
                   <button onClick={() => handleDelete(user.id)} className="text-red-600 text-xl">🗑</button>
-                  <button className="bg-gray-300 px-3 py-1 rounded-full">View More</button>
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
-      <div className="block md:hidden">
-        {users.map((user) => (
-          <div key={user.id} className="mb-4 p-4 border rounded-lg shadow-md bg-gray-50">
-            <p className="font-semibold text-lg">{user.name}</p>
-            <p className="text-gray-600">{user.email}</p>
-            <p className="text-gray-500">
-              <span className="px-2 py-1 bg-gray-200 rounded-full">{user.role}</span>
-            </p>
-            <p className="text-sm text-gray-400">{user.date}</p>
-            <div className="mt-2 flex space-x-2">
-              <button className="bg-gray-300 px-3 py-1 rounded-full">Edit</button>
-              <button onClick={() => handleDelete(user.id)} className="text-red-600">🗑</button>
-              <button className="bg-gray-300 px-3 py-1 rounded-full">View More</button>
-            </div>
-
-          </div>
-        ))}
-      </div>
-
       {/* Add User Modal */}
       <AddUserModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        onSave={handleSave}
-        formData={formData}
-        handleChange={handleChange}
       />
     </div>
   );

@@ -1,14 +1,7 @@
 import React, { useState } from "react";
 import { NavLink,Link } from "react-router-dom";
-import { MdOutlineSettings } from "react-icons/md";
-import { GiBackwardTime } from "react-icons/gi";
-import { TbFileStack, TbFlagBolt, TbUserCheck } from "react-icons/tb";
-import { CgPerformance } from "react-icons/cg";
-import { PiMagnifyingGlassFill } from "react-icons/pi";
-import { FaSuperpowers } from "react-icons/fa";
 import { MdDashboard } from "react-icons/md";
 import { BiEdit } from "react-icons/bi";
-import { BiBriefcase } from "react-icons/bi";
 import { BsPersonBadge } from "react-icons/bs";
 import { BiSolidCheckShield } from "react-icons/bi";
 import { SiLens } from "react-icons/si";
@@ -138,7 +131,7 @@ const isOfferPunchActive = location.pathname === "/offer-punch";
                   ? "flex items-center space-x-4 px-4 py-6 bg-purple-400  shadow-md"
                   : "flex items-center space-x-4 px-4 py-6 hover:text-black hover:bg-[#E8DEF8] bg-opacity-95  transition-all duration-200"
               }
-              onClick={() => setSelectedNav("Offer Intelligence")}
+              onClick={() => setSelectedNav("Contact queries")}
             >
               <SiLens className="h-5 w-5" />
               <span className="text-sm font-medium">Contact queries</span>
@@ -177,7 +170,7 @@ const isOfferPunchActive = location.pathname === "/offer-punch";
                   ? "flex items-center space-x-4 px-4 py-6 bg-purple-400  shadow-md"
                   : "flex items-center space-x-4 px-4 py-6 hover:text-black hover:bg-[#E8DEF8] bg-opacity-95  transition-all duration-200"
               }
-              onClick={() => setSelectedNav("Offer Intelligence")}
+              onClick={() => setSelectedNav("Notepad")}
             >
               <SiLens className="h-5 w-5" />
               <span className="text-sm font-medium">Notepad</span>
@@ -190,7 +183,7 @@ const isOfferPunchActive = location.pathname === "/offer-punch";
                   ? "flex items-center space-x-4 px-4 py-6 bg-purple-400  shadow-md"
                   : "flex items-center space-x-4 px-4 py-6 hover:text-black hover:bg-[#E8DEF8] bg-opacity-95  transition-all duration-200"
               }
-              onClick={() => setSelectedNav("Offer Intelligence")}
+              onClick={() => setSelectedNav("To Do")}
             >
               <SiLens className="h-5 w-5" />
               <span className="text-sm font-medium">To Do</span>
