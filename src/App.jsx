@@ -13,23 +13,26 @@ import User_M from "./pages/User_Management/User_M";
 import Contact from "./pages/Contact/Contact";
 import Candidates from "./pages/Users/Candidates";
 
+import Sidebar from "./components/Sidebar";
+
 function App() {
   return (
     <>
       <Router>
         <Routes>
-          <Route path="/" element={<Login />}>
-            <Route path="/dashboard" element={<DashBoard />} />
-            <Route path="/users" element={<Users />} />
-            <Route path="/candidates" element={<Candidates />} />
-            <Route path="/contact" element={<Contact />} />
-            <Route path="/subscriptions" element={<Subscriptions />} />
-            <Route path="/todo" element={<ToDo />} />
-            <Route path="/notepad" element={<Notepad />} />
-            <Route path="/teammanagement" element={<User_M />} />
+          <Route path="/" element={<Login />}></Route>
+          
+          <Route path="/dashboard" element={<DashBoard />} />
+          <Route path="/users" element={<Users />} />
+          <Route path="/candidates" element={<Candidates />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/subscriptions" element={<Subscriptions />} />
+          <Route path="/todo" element={<ToDo />} />
+          <Route path="/notepad" element={<Notepad />} />
+          <Route path="/teammanagement" element={<User_M />} />
 
-            <Route path="/extractInfo" element={<ExtractDataFromPdf />} />
-          </Route>
+          <Route path="/extractInfo" element={<ExtractDataFromPdf />} />
+
         </Routes>
       </Router>
     </>
