@@ -93,7 +93,7 @@ const UserManagement = () => {
                       onBlur={handleSave}
                       onKeyDown={(e) => e.key === "Enter" && handleSave()}
                       autoFocus
-                      className="border rounded px-2 py-1 w-full"
+                      className="border rounded px-2 py-1 w-[130px]"
                     />
                   ) : (
                     user.name
@@ -113,7 +113,7 @@ const UserManagement = () => {
                       onBlur={handleSave}
                       onKeyDown={(e) => e.key === "Enter" && handleSave()}
                       autoFocus
-                      className="border rounded px-2 py-1 w-full"
+                      className="border rounded px-2 py-1 w-[130px]"
                     />
                   ) : (
                     user.phone
@@ -133,7 +133,7 @@ const UserManagement = () => {
                       onBlur={handleSave}
                       onKeyDown={(e) => e.key === "Enter" && handleSave()}
                       autoFocus
-                      className="border rounded px-2 py-1 w-full"
+                      className="border rounded px-2 py-1 w-[130px]"
                     />
                   ) : (
                     user.email
@@ -153,7 +153,7 @@ const UserManagement = () => {
                       onBlur={handleSave}
                       onKeyDown={(e) => e.key === "Enter" && handleSave()}
                       autoFocus
-                      className="border rounded px-2 py-1 w-[50%]"
+                      className="border rounded px-2 py-1 w-[130px]"
                     />
                   ) : (
                     user.role

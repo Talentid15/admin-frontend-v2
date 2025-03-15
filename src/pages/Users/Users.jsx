@@ -4,40 +4,64 @@ import { FaPencilAlt } from "react-icons/fa";
 
 const UserManagement = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+    const [editing, setEditing] = useState(null);
+    const [editValue, setEditValue] = useState("");
+     // Handle double-click to start editing
+  const handleDoubleClick = (id, field, value) => {
+    setEditing({ id, field });
+    setEditValue(value);
+  };
+
+  // Handle input change
+  const handleEditChange = (e) => setEditValue(e.target.value);
+
+  // Handle saving on enter or blur
+  const handleEditSave = () => {
+    if (!editing) return;
+
+    setUsers((prevUsers) =>
+      prevUsers.map((user) =>
+        user.id === editing.id ? { ...user, [editing.field]: editValue } : user
+      )
+    );
+
+    setEditing(null);
+    setEditValue("");
+  };
   const [users, setUsers] = useState([
     {
       id: 1,
       name: "Jainayak N",
       email: "jai@talentid.app",
-      role: "Admin",
+      enabled: true,
       date: "Jan 8, 2025",
     },
     {
       id: 2,
       name: "Jainayak N",
       email: "jai@talentid.app",
-      role: "Admin",
+      enabled: false,
       date: "Jan 8, 2025",
     },
     {
       id: 3,
       name: "Jainayak N",
       email: "jai@talentid.app",
-      role: true,
+      enabled: true,
       date: "Jan 8, 2025",
     },
     {
       id: 4,
       name: "Jainayak N",
       email: "jai@talentid.app",
-      role: true,
+      enabled: true,
       date: "Jan 8, 2025",
     },
     {
       id: 5,
       name: "Jainayak N",
       email: "jai@talentid.app",
-      role: true,
+      enabled: false,
       date: "Jan 8, 2025",
     },
   ]);
@@ -108,8 +132,42 @@ const UserManagement = () => {
           <tbody>
             {users.map((user) => (
               <tr key={user.id} className="border-b">
-                <td className="p-3">{user.name}</td>
-                <td className="p-3">{user.email}</td>
+                <td
+                  className="p-3 cursor-pointer"
+                  onDoubleClick={() => handleDoubleClick(user.id, "name", user.name)}
+                >
+                  {editing?.id === user.id && editing?.field === "name" ? (
+                    <input
+                      type="text"
+                      value={editValue}
+                      onChange={handleEditChange}
+                      onBlur={handleEditSave}
+                      onKeyDown={(e) => e.key === "Enter" && handleSave()}
+                      autoFocus
+                      className="border rounded px-2 py-1 w-[130px]"
+                    />
+                  ) : (
+                    user.name
+                  )}
+                </td>
+                <td
+                  className="p-3 cursor-pointer"
+                  onDoubleClick={() => handleDoubleClick(user.id, "email", user.email)}
+                >
+                  {editing?.id === user.id && editing?.field === "email" ? (
+                    <input
+                      type="text"
+                      value={editValue}
+                      onChange={handleEditChange}
+                      onBlur={handleEditSave}
+                      onKeyDown={(e) => e.key === "Enter" && handleSave()}
+                      autoFocus
+                      className="border rounded px-2 py-1 w-[130px]"
+                    />
+                  ) : (
+                    user.email
+                  )}
+                </td>
                 <td className="p-3 text-center">
               <button
                 onClick={() => toggleNotification(user.id)}
@@ -127,7 +185,7 @@ const UserManagement = () => {
             </td>
                 <td className="p-3">{user.date}</td>
                 <td className="p-2 flex items-center space-x-4">
-                  <button className="bg-white px-3 py-1 rounded-full"><FaPencilAlt /></button>
+                  
                   <button onClick={() => handleDelete(user.id)} className="text-red-600 text-xl">🗑</button>
                   <button className="bg-gray-300 px-3 py-1 rounded-full">View More</button>
                 </td>
@@ -148,7 +206,7 @@ const UserManagement = () => {
             </p>
             <p className="text-sm text-gray-400">{user.date}</p>
             <div className="mt-2 flex space-x-2">
-              <button className="bg-gray-300 px-3 py-1 rounded-full">Edit</button>
+            
               <button onClick={() => handleDelete(user.id)} className="text-red-600">🗑</button>
               <button className="bg-gray-300 px-3 py-1 rounded-full">View More</button>
             </div>

@@ -100,7 +100,7 @@ const UserManagement = () => {
                       onBlur={() => handleBlurOrEnter(user.id, "name")}
                       onKeyDown={(e) => e.key === "Enter" && handleBlurOrEnter(user.id, "name")}
                       autoFocus
-                      className="border rounded px-2 py-1"
+                      className="border rounded px-2 py-1 w-[130px]"
                     />
                   ) : (
                     user.name
@@ -118,7 +118,7 @@ const UserManagement = () => {
                       onBlur={() => handleBlurOrEnter(user.id, "phone")}
                       onKeyDown={(e) => e.key === "Enter" && handleBlurOrEnter(user.id, "phone")}
                       autoFocus
-                      className="border rounded px-2 py-1"
+                      className="border rounded px-2 py-1 w-[150px]"
                     />
                   ) : (
                     user.phone
@@ -136,7 +136,7 @@ const UserManagement = () => {
                       onBlur={() => handleBlurOrEnter(user.id, "email")}
                       onKeyDown={(e) => e.key === "Enter" && handleBlurOrEnter(user.id, "email")}
                       autoFocus
-                      className="border rounded px-2 py-1"
+                      className="border rounded px-2 py-1 w-[150px]"
                     />
                   ) : (
                     user.email
@@ -146,7 +146,7 @@ const UserManagement = () => {
                   <select
                     value={user.status}
                     onChange={(e) => handleStatusChange(user.id, e.target.value)}
-                    className={`rounded-full px-2 py-1 text-white font-medium
+                    className={`rounded-full px-2 py-1 text-white  font-medium
                       ${user.status === "open" ? "bg-green-500" : ""}
                       ${user.status === "pending" ? "bg-yellow-500" : ""}
                       ${user.status === "closed" ? "bg-red-500" : ""}
@@ -159,7 +159,7 @@ const UserManagement = () => {
                 </td>
 
                 <td className="p-3">{user.date}</td>
-                <td className="p-2 flex items-center space-x-3">
+                <td className="p-2 flex items-center justify-center mr-6">
                   <button onClick={() => handleDelete(user.id)} className="text-red-600 text-xl">🗑</button>
                 </td>
               </tr>
