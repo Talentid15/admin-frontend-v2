@@ -5,12 +5,13 @@ import { GiRingingBell } from "react-icons/gi";
 import { ImInfo } from 'react-icons/im';
 import logo from '../assets/logo.png';
 
-
-
 import { useNavigate } from 'react-router-dom';
 
+import { useSelector,useDispatch } from 'react-redux';
 
+import { logout } from '../redux/userSlice';
 
+import toast from 'react-hot-toast';
 
 const Header = () => {
 
@@ -22,8 +23,10 @@ const Header = () => {
   const navigate = useNavigate();
 
 
+  const userData = useSelector((state) => state.user.data);
 
- 
+  const dispatch = useDispatch();
+
 
   // Toggle notification dropdown
   const toggleNotifications = () => {
@@ -53,7 +56,7 @@ const Header = () => {
   }, []);
 
   return (
-    <header className="flex items-center justify-between bg-white shadow-md px-6 py-4 relative">
+    <header className="flex items-center z-50 justify-between bg-white shadow-md px-6 py-4 relative">
       {/* Logo Section */}
       <div className="flex items-center">
         <img src={logo} alt="TalentID Logo" className="h-8 w-auto" />
@@ -80,12 +83,12 @@ const Header = () => {
                 <FaTimes className="text-gray-600 cursor-pointer hover:text-red-500" onClick={() => setShowProfile(false)} />
               </div>
               <div className="p-4 text-center">
-                {/* <img src={user.userImage} alt="User" className="w-16 h-16 rounded-full mx-auto" /> */}
-                <p className="text-gray-800 font-semibold mt-2">Jai N</p>
-                <p className="text-gray-500 text-sm">jai@TalentID</p>
+                <img src="https://fastly.picsum.photos/id/237/200/300.jpg?hmac=TmmQSbShHz9CdQm0NkEjx1Dyh_Y984R9LpNrpvH2D_U" alt="User" className="w-16 h-16 rounded-full mx-auto" />
+                <p className="text-gray-800 font-semibold mt-2">{userData.fullname}</p>
+                <p className="text-gray-500 text-sm">{userData.email}</p>
               </div>
               <ul className="space-y-2 p-2" >
-                <li className="flex items-center text-gray-600 border-b hover:bg-gray-100 p-2 cursor-pointer" onClick={() => {
+                {/* <li className="flex items-center text-gray-600 border-b hover:bg-gray-100 p-2 cursor-pointer" onClick={() => {
 
                   navigate("/settings");
 
@@ -94,22 +97,27 @@ const Header = () => {
                 </li>
                 <li className="flex items-center text-gray-600 border-b hover:bg-gray-100 p-2 cursor-pointer">
                   <FaCog className="mr-2" /> Settings
-                </li>
-                <li className="flex items-center text-gray-600 border-b hover:bg-gray-100 p-2 cursor-pointer" onClick={() => {
+                </li> */}
+                {/* <li className="flex items-center text-gray-600 border-b hover:bg-gray-100 p-2 cursor-pointer" onClick={() => {
 
                   navigate("/settings/subscription");
 
                 }}>
                   <MdOutlineCurrencyExchange className='mr-2' /> Subscription
-                </li>
-                <li className="flex items-center text-gray-600 hover:bg-gray-100 p-2 cursor-pointer" onClick={()=>{
+                </li> */}
 
-                 
+
+                <li className="flex items-center text-gray-600 hover:bg-gray-100 p-2 cursor-pointer" onClick={()=>{
 
                   navigate("/login");
 
                 }}>
-                  <FaSignOutAlt className="mr-2 text-red-500" /> Logout
+                  <FaSignOutAlt className="mr-2 text-red-500" onClick={()=>{
+
+                    dispatch(logout());
+                    
+                    toast.success("Logged Out Successfully");
+                  }}/> Logout
                 </li>
               </ul>
             </div>

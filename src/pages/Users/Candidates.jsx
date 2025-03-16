@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
 
@@ -25,14 +25,21 @@ const CandidateManagement = () => {
   });
 
   const handleEdit = (candidateId, field, value) => {
-    setEditedData({ ...editedData, [candidateId]: { ...editedData[candidateId], [field]: value } });
+    setEditedData({
+      ...editedData,
+      [candidateId]: { ...editedData[candidateId], [field]: value },
+    });
   };
 
   const saveChanges = (candidateId) => {
     axios
       .put(`${backend_url}/api/candidates/${candidateId}`, editedData[candidateId])
       .then((response) => {
-        setCandidates(candidates.map((candidate) => (candidate._id === candidateId ? response.data : candidate)));
+        setCandidates(
+          candidates.map((candidate) =>
+            candidate._id === candidateId ? response.data : candidate
+          )
+        );
         setEditingCandidate(null);
         setEditedData({});
       })
@@ -43,7 +50,7 @@ const CandidateManagement = () => {
     <div className="p-4 relative overflow-x-auto w-[70%]">
       <div className="flex w-full justify-between items-center mb-4">
         <h2 className="text-xl font-bold">Candidate Management</h2>
-        <button 
+        <button
           className="bg-green-500 text-white px-4 py-2 rounded-md"
           onClick={refetch}
           disabled={isFetching}
@@ -59,22 +66,47 @@ const CandidateManagement = () => {
               <th className="p-2 border">Name</th>
               <th className="p-2 border">Email</th>
               <th className="p-2 border">Phone</th>
-              {/* <th className="p-2 border">Skills</th> */}
-              <th className="p-2 border">resumeLink</th>
-              {/* <th className="p-2 border">Education</th> */}
+              <th className="p-2 border">Resume Link</th>
               <th className="p-2 border">Actions</th>
             </tr>
           </thead>
           <tbody>
             {candidates.map((candidate) => (
               <tr key={candidate._id} className="text-center border">
-                <td className="p-2 border">{candidate.name}</td>
-                <td className="p-2 border">{candidate.email}</td>
+                {/* Name - Editable */}
                 <td className="p-2 border" onDoubleClick={() => setEditingCandidate(candidate._id)}>
                   {editingCandidate === candidate._id ? (
                     <input
                       type="text"
-                      className="text-center"
+                      className="text-center border rounded px-1"
+                      value={editedData[candidate._id]?.name || candidate.name}
+                      onChange={(e) => handleEdit(candidate._id, "name", e.target.value)}
+                    />
+                  ) : (
+                    candidate.name
+                  )}
+                </td>
+
+                {/* Email - Editable */}
+                <td className="p-2 border" onDoubleClick={() => setEditingCandidate(candidate._id)}>
+                  {editingCandidate === candidate._id ? (
+                    <input
+                      type="email"
+                      className="text-center border rounded px-1"
+                      value={editedData[candidate._id]?.email || candidate.email}
+                      onChange={(e) => handleEdit(candidate._id, "email", e.target.value)}
+                    />
+                  ) : (
+                    candidate.email
+                  )}
+                </td>
+
+                {/* Phone - Editable */}
+                <td className="p-2 border" onDoubleClick={() => setEditingCandidate(candidate._id)}>
+                  {editingCandidate === candidate._id ? (
+                    <input
+                      type="text"
+                      className="text-center border rounded px-1"
                       value={editedData[candidate._id]?.phoneNo || candidate.phoneNo}
                       onChange={(e) => handleEdit(candidate._id, "phoneNo", e.target.value)}
                     />
@@ -82,31 +114,34 @@ const CandidateManagement = () => {
                     candidate.phoneNo
                   )}
                 </td>
-                {/* <td className="p-2 border">
-                  {candidate.skills?.join(", ")}
-                </td> */}
-                <td className="p-2 border" onDoubleClick={() => setEditingCandidate(candidate._id)}>
-                  {editingCandidate === candidate._id ? (
-                    <input
-                      type="text"
-                      className="text-center"
-                      value={editedData[candidate._id]?.resumeLink || candidate.resumeLink}
-                      onChange={(e) => handleEdit(candidate._id, "resumeLink", e.target.value)}
-                    />
-                  ) : (
-                    candidate.resumeLink
-                  )}
+
+                {/* Resume Link - Not Editable */}
+                <td className="p-2 border">
+                  <a
+                    href={candidate.resumeLink}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-blue-500 underline"
+                    onClick={(e) => e.stopPropagation()} // Prevent triggering edit mode
+                  >
+                    View Resume
+                  </a>
                 </td>
-                {/* <td className="p-2 border">
-                  {candidate.educationDegree} - {candidate.educationCollege}
-                </td> */}
+
+                {/* Actions */}
                 <td className="p-2 border">
                   {editingCandidate === candidate._id ? (
-                    <button className="bg-blue-500 text-white px-2 py-1" onClick={() => saveChanges(candidate._id)}>
+                    <button
+                      className="bg-blue-500 text-white px-2 py-1 rounded"
+                      onClick={() => saveChanges(candidate._id)}
+                    >
                       Save
                     </button>
                   ) : (
-                    <button className="bg-gray-500 text-white px-2 py-1" onClick={() => setEditingCandidate(candidate._id)}>
+                    <button
+                      className="bg-gray-500 text-white px-2 py-1 rounded"
+                      onClick={() => setEditingCandidate(candidate._id)}
+                    >
                       Edit
                     </button>
                   )}

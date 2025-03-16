@@ -1,6 +1,6 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Login from "./pages/Login"; // Renamed to avoid confusion
+import Login from "./pages/Login"; 
 import ExtractDataFromPdf from "./pages/ExtractDataFromPdf";
 import DashBoard from "./pages/DashBoard/DashBoard";
 import Users from "./pages/Users/Users";
@@ -10,17 +10,34 @@ import Notepad from "./pages/Notepad/Notepad";
 import User_M from "./pages/User_Management/User_M";
 import Contact from "./pages/Contact/Contact";
 import Candidates from "./pages/Users/Candidates";
-import Index from "./pages/index"; // Layout component that includes Sidebar & Outlet
+import Index from "./pages/index"; 
+
+import PublicRoute from "./pages/PublicRoutes";
+import ProtectedRoute from "./pages/ProtectedRoute";
 
 function App() {
   return (
     <Router>
       <Routes>
-        {/* Public Route */}
-        <Route path="/login" element={<Login />} />
+        {/* Public Routes */}
+        <Route
+          path="/login"
+          element={
+            <PublicRoute>
+              <Login />
+            </PublicRoute>
+          }
+        />
 
         {/* Protected Routes with Sidebar and Outlet */}
-        <Route path="/" element={<Index />}>
+        <Route
+          path="/"
+          element={
+            <ProtectedRoute>
+              <Index />
+            </ProtectedRoute>
+          }
+        >
           <Route path="dashboard" element={<DashBoard />} />
           <Route path="users" element={<Users />} />
           <Route path="candidates" element={<Candidates />} />
