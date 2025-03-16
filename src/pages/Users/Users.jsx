@@ -1,228 +1,139 @@
-import React, { useState } from "react";
-import AddUserModal from "/src/components/settings/AddUserModal.jsx"; // Import the modal
-import { FaPencilAlt } from "react-icons/fa";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import { useQuery } from "@tanstack/react-query";
 
 const UserManagement = () => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-    const [editing, setEditing] = useState(null);
-    const [editValue, setEditValue] = useState("");
-     // Handle double-click to start editing
-  const handleDoubleClick = (id, field, value) => {
-    setEditing({ id, field });
-    setEditValue(value);
-  };
+  const [users, setUsers] = useState([]);
+  const [editingUser, setEditingUser] = useState(null);
+  const [editedData, setEditedData] = useState({});
 
-  // Handle input change
-  const handleEditChange = (e) => setEditValue(e.target.value);
+  const backend_url = import.meta.env.VITE_BACKEND_URL;
 
-  // Handle saving on enter or blur
-  const handleEditSave = () => {
-    if (!editing) return;
+  async function fetchRecruiterData() {
+    try {
+      const response = await axios.get(`${backend_url}/api/admin/get-all-recruiters`);
+      setUsers(response.data.data);
+    } catch (error) {
+      console.error("Error fetching users:", error);
+    }
+  }
 
-    setUsers((prevUsers) =>
-      prevUsers.map((user) =>
-        user.id === editing.id ? { ...user, [editing.field]: editValue } : user
-      )
-    );
-
-    setEditing(null);
-    setEditValue("");
-  };
-  const [users, setUsers] = useState([
-    {
-      id: 1,
-      name: "Jainayak N",
-      email: "jai@talentid.app",
-      enabled: true,
-      date: "Jan 8, 2025",
-    },
-    {
-      id: 2,
-      name: "Jainayak N",
-      email: "jai@talentid.app",
-      enabled: false,
-      date: "Jan 8, 2025",
-    },
-    {
-      id: 3,
-      name: "Jainayak N",
-      email: "jai@talentid.app",
-      enabled: true,
-      date: "Jan 8, 2025",
-    },
-    {
-      id: 4,
-      name: "Jainayak N",
-      email: "jai@talentid.app",
-      enabled: true,
-      date: "Jan 8, 2025",
-    },
-    {
-      id: 5,
-      name: "Jainayak N",
-      email: "jai@talentid.app",
-      enabled: false,
-      date: "Jan 8, 2025",
-    },
-  ]);
-
-  const [formData, setFormData] = useState({
-    firstName: "",
-    lastName: "",
-    email: "",
-    role: true,
+  const { refetch, isFetching } = useQuery({
+    queryKey: ["recruiter-data"],
+    queryFn: fetchRecruiterData,
+    refetchOnWindowFocus: false,
   });
 
-  // Handle input change
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+  const handleEdit = (userId, field, value) => {
+    setEditedData({ ...editedData, [userId]: { ...editedData[userId], [field]: value } });
   };
 
-  // Handle adding user
-  const handleSave = () => {
-    if (!formData.firstName || !formData.lastName || !formData.email) return;
-
-    const newUser = {
-      id: users.length + 1,
-      name: `${formData.firstName} ${formData.lastName}`,
-      email: formData.email,
-      role: formData.role,
-      date: new Date().toDateString(),
-    };
-
-    setUsers([...users, newUser]); // Add new user to table
-    setIsModalOpen(false); // Close modal
-    setFormData({ firstName: "", lastName: "", email: "", role: true }); // Reset form
+  const saveChanges = (userId) => {
+    axios
+      .put(`${backend_url}/api/users/${userId}`, editedData[userId])
+      .then((response) => {
+        setUsers(users.map((user) => (user._id === userId ? response.data : user)));
+        setEditingUser(null);
+        setEditedData({});
+      })
+      .catch((error) => console.error("Error updating user:", error));
   };
 
-  // Handle user deletion
-  const handleDelete = (id) => {
-    setUsers(users.filter((user) => user.id !== id));
-  };
-
-  const toggleNotification = (id) => {
-      setUsers((prev) =>
-        prev.map((user) =>
-          user.id === id ? { ...user, enabled: !user.enabled } : user
-        )
-      );
-    };
   return (
-    <div className="w-full max-w-5xl mx-auto mt-10 p-4 bg-white rounded-xl shadow-lg">
-      {/* <div className="flex justify-end items-end mb-4">
-        <button
-          onClick={() => setIsModalOpen(true)}
-          className="bg-gray-200 hover:bg-gray-300 text-black font-medium px-4 py-2 rounded-full"
+    <div className="p-4 relative w-[90%] overflow-x-auto ">
+      <div className="flex w-full justify-between items-center mb-4">
+        <h2 className="text-xl font-bold">User Management</h2>
+        <button 
+          className="bg-green-500 text-white px-4 py-2 rounded-md"
+          onClick={refetch}
+          disabled={isFetching}
         >
-          Add users +
+          {isFetching ? "Refreshing..." : "Refresh"}
         </button>
-      </div> */}
+      </div>
 
-      <div className="overflow-x-auto hidden md:block">
-        <table className="w-full bg-white rounded-lg">
+      <div className="w-full overflow-x-auto">
+        <table className="min-w-max w-full border border-gray-300">
           <thead>
-            <tr className="border-b ">
-              <th className="p-3 text-left">Name</th>
-              <th className="p-3 text-left">Email</th>
-              <th className="p-3 text-left pl-12">Status</th>
-              <th className="p-3 text-left">Date Added</th>
-              <th className="p-3 text-left pl-8">Actions</th>
+            <tr className="bg-gray-200">
+              <th className="p-2 border">Name</th>
+              <th className="p-2 border">Email</th>
+              <th className="p-2 border">Role</th>
+              <th className="p-2 border">Company</th>
+              <th className="p-2 border">Subscription Plan</th>
+              <th className="p-2 border">Credits</th>
+              <th className="p-2 border">Actions</th>
             </tr>
           </thead>
           <tbody>
             {users.map((user) => (
-              <tr key={user.id} className="border-b">
-                <td
-                  className="p-3 cursor-pointer"
-                  onDoubleClick={() => handleDoubleClick(user.id, "name", user.name)}
-                >
-                  {editing?.id === user.id && editing?.field === "name" ? (
+              <tr key={user._id} className="text-center border">
+                <td className="p-2 border whitespace-nowrap">{user.fullname}</td>
+                <td className="p-2 border whitespace-nowrap">{user.email}</td>
+                <td className="p-2 border whitespace-nowrap" onDoubleClick={() => setEditingUser(user._id)}>
+                  {editingUser === user._id ? (
                     <input
+                      className="text-center border p-1 w-full"
                       type="text"
-                      value={editValue}
-                      onChange={handleEditChange}
-                      onBlur={handleEditSave}
-                      onKeyDown={(e) => e.key === "Enter" && handleSave()}
-                      autoFocus
-                      className="border rounded px-2 py-1 w-[130px]"
+                      value={editedData[user._id]?.role || user.role}
+                      onChange={(e) => handleEdit(user._id, "role", e.target.value)}
                     />
                   ) : (
-                    user.name
+                    user.role
                   )}
                 </td>
-                <td
-                  className="p-3 cursor-pointer"
-                  onDoubleClick={() => handleDoubleClick(user.id, "email", user.email)}
-                >
-                  {editing?.id === user.id && editing?.field === "email" ? (
+                <td className="p-2 border whitespace-nowrap" onDoubleClick={() => setEditingUser(user._id)}>
+                  {editingUser === user._id ? (
                     <input
+                      className="text-center border p-1 w-full"
                       type="text"
-                      value={editValue}
-                      onChange={handleEditChange}
-                      onBlur={handleEditSave}
-                      onKeyDown={(e) => e.key === "Enter" && handleSave()}
-                      autoFocus
-                      className="border rounded px-2 py-1 w-[130px]"
+                      value={editedData[user._id]?.company || user.company}
+                      onChange={(e) => handleEdit(user._id, "company", e.target.value)}
                     />
                   ) : (
-                    user.email
+                    user.company
                   )}
                 </td>
-                <td className="p-3 text-center">
-              <button
-                onClick={() => toggleNotification(user.id)}
-                className={`relative w-12 h-6 rounded-full transition duration-300 ${
-                  user.enabled ? "bg-green-500" : "bg-gray-300"
-                }`}
-              >
-                <span
-                  className={`absolute left-1 top-1 w-4 h-4 bg-white rounded-full transition duration-300 ${
-                    user.enabled ? "translate-x-6" : "translate-x-0"
-                  }`}
-                ></span>
-              </button>
-              
-            </td>
-                <td className="p-3">{user.date}</td>
-                <td className="p-2 flex items-center space-x-4">
-                  
-                  <button onClick={() => handleDelete(user.id)} className="text-red-600 text-xl">🗑</button>
-                  <button className="bg-gray-300 px-3 py-1 rounded-full">View More</button>
+                <td className="p-2 border whitespace-nowrap" onDoubleClick={() => setEditingUser(user._id)}>
+                  {editingUser === user._id ? (
+                    <input
+                      type="text"
+                      className="text-center border p-1 w-full"
+                      value={editedData[user._id]?.subscriptionPlan || user.subscriptionPlan}
+                      onChange={(e) => handleEdit(user._id, "subscriptionPlan", e.target.value)}
+                    />
+                  ) : (
+                    user.subscriptionPlan
+                  )}
+                </td>
+                <td className="p-2 border whitespace-nowrap" onDoubleClick={() => setEditingUser(user._id)}>
+                  {editingUser === user._id ? (
+                    <input
+                      type="number"
+                      className="text-center border p-1 w-full"
+                      value={editedData[user._id]?.credits || user.credits}
+                      onChange={(e) => handleEdit(user._id, "credits", e.target.value)}
+                    />
+                  ) : (
+                    user.credits
+                  )}
+                </td>
+                <td className="p-2 border whitespace-nowrap">
+                  {editingUser === user._id ? (
+                    <button className="bg-blue-500 text-white px-2 py-1 rounded" onClick={() => saveChanges(user._id)}>
+                      Save
+                    </button>
+                  ) : (
+                    <button className="bg-gray-500 text-white px-2 py-1 rounded" onClick={() => setEditingUser(user._id)}>
+                      Edit
+                    </button>
+                  )}
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
-
-      {/* Vertical cards for small screens */}
-      <div className="block md:hidden">
-        {users.map((user) => (
-          <div key={user.id} className="mb-4 p-4 border rounded-lg shadow-md bg-gray-50">
-            <p className="font-semibold text-lg">{user.name}</p>
-            <p className="text-gray-600">{user.email}</p>
-            <p className="text-gray-500">
-              <span className="px-2 py-1 bg-gray-200 rounded-full">{user.role}</span>
-            </p>
-            <p className="text-sm text-gray-400">{user.date}</p>
-            <div className="mt-2 flex space-x-2">
-            
-              <button onClick={() => handleDelete(user.id)} className="text-red-600">🗑</button>
-              <button className="bg-gray-300 px-3 py-1 rounded-full">View More</button>
-            </div>
-
-          </div>
-        ))}
-      </div>
-
-      {/* Add User Modal */}
-      <AddUserModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        onSave={handleSave}
-        formData={formData}
-        handleChange={handleChange}
-      />
     </div>
   );
 };
