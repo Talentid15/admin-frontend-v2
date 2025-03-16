@@ -32,3 +32,16 @@ export function Dateformatter(dateString){
 
 
 }
+
+
+
+export const user_role={
+
+    "Super_Admin": "Super_Admin",
+    "Sub_Admin":"Sub_Admin",
+    "User": "User",
+    "Corporate HR": "Corporate HR",
+    "HR Agency": "HR Agency",
+    "Others": "Others"
+
+}

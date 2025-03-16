@@ -39,7 +39,7 @@ function App() {
           }
         >
           <Route path="dashboard" element={<DashBoard />} />
-          <Route path="users" element={<Users />} />
+          <Route path="recruiters" element={<Users />} />
           <Route path="candidates" element={<Candidates />} />
           <Route path="contact" element={<Contact />} />
           <Route path="subscriptions" element={<Subscriptions />} />

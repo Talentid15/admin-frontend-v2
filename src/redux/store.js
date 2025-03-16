@@ -1,57 +1,35 @@
-import { combineReducers, configureStore } from "@reduxjs/toolkit";
-import UserSlice from "./userSlice";
-
-
-import {
-  persistReducer,
-  persistStore,
-  FLUSH,
-  REHYDRATE,
-  PAUSE,
-  PERSIST,
-  PURGE,
-  REGISTER,
-} from "redux-persist";
+import { configureStore } from "@reduxjs/toolkit";
+import { persistStore } from "redux-persist";
+import userReducer from "./userSlice";
 import storage from "redux-persist/lib/storage";
+import { persistReducer } from "redux-persist";
+import { combineReducers } from "redux";
 
+// Combine reducers (useful if you have multiple slices)
+const rootReducer = combineReducers({
+  user: userReducer,
+});
 
 // Persist configuration
 const persistConfig = {
   key: "root",
-  version: 1,
   storage,
+  whitelist: ["user"], // Only persist the user slice
 };
-
-// Combine reducers
-const rootReducer = combineReducers({
-  user: UserSlice,
-});
 
 // Create persisted reducer
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 
-// Middleware to check for expired data
-const expiryMiddleware = (store) => (next) => (action) => {
-  const state = store.getState();
-  if (state.user && state.user.createdAt) {
-    store.dispatch(checkExpiry());
-  }
-  return next(action);
-};
-
-// Configure and create the Redux store
-export const store = configureStore({
+// Configure store
+const store = configureStore({
   reducer: persistedReducer,
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
-      serializableCheck: {
-        ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
-      },
-    }).concat(expiryMiddleware), // Add the expiry middleware here
+      serializableCheck: false, // Prevents Redux Persist warnings
+    }),
 });
 
-// Create the persistor
-export const persistor = persistStore(store);
+// Create persistor
+const persistor = persistStore(store);
 
-// Export the store as default
-export default store;
+export { store, persistor };

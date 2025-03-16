@@ -6,6 +6,8 @@ const UserManagement = () => {
   const [editingUser, setEditingUser] = useState(null);
   const [editedData, setEditedData] = useState({});
 
+  console.log("hellow admin ke anddar")
+
   const backend_url = import.meta.env.VITE_BACKEND_URL;
 
   const fetchRecruiterData = async () => {
@@ -24,6 +26,9 @@ const UserManagement = () => {
   };
 
   const saveChanges = async (userId) => {
+
+    console.log("for saving the changes",editedData[userId]);
+
     try {
       await axios.put(`${backend_url}/api/users/${userId}`, editedData[userId]);
       setEditingUser(null);

@@ -1,13 +1,16 @@
+import { useSelector } from "react-redux";
+import { Navigate } from "react-router-dom";
 
-import { useSelector } from "react-redux"
-const PublicRoute =({children})=>{
+const PublicRoute = ({ children }) => {
+    const userData = useSelector((state) => state.user.data);
 
-    const userData = useSelector((state)=>state.user.data);
+    console.log("user data ",userData)
 
-    if(userData){
-        return <Navigate to="/dashboard"></Navigate>
+    if (userData) {
+        return <Navigate to="/dashboard" replace />;
     }
+
     return children;
-}
+};
 
 export default PublicRoute;
