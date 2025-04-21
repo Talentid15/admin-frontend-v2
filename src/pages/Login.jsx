@@ -30,7 +30,7 @@ const Login = () => {
 
     try {
       const response = await axios.post(
-        `${backendUrl}/api/auth/login`,
+        `https://backend.talentid.app/api/auth/login`,
         {
           email: data.email,
           password: data.password,
