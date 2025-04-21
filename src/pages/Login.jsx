@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import  { useState } from "react";
 import { useForm } from "react-hook-form";
-import { FaUser, FaEnvelope, FaLock, FaEye, FaEyeSlash } from "react-icons/fa"; // Import Eye Icons
+import { FaEnvelope, FaLock, FaEye, FaEyeSlash } from "react-icons/fa"; // Import Eye Icons
 import logo from "../assets/logo.png";
 import { Turnstile } from "@marsidev/react-turnstile";
 import axios from "axios";
@@ -34,7 +34,7 @@ const Login = () => {
         {
           email: data.email,
           password: data.password,
-          captchaValue: token,
+          captchaValue:  '',
         },
         {
           withCredentials: true,
@@ -110,10 +110,10 @@ const Login = () => {
                 {errors.password && <p className="text-sm text-red-600 mt-1">{errors.password.message}</p>}
               </div>
 
-              <div className="flex items-center space-y-2 gap-12">
+    {/**          <div className="flex items-center space-y-2 gap-12">
                 <Turnstile siteKey={siteKey} onSuccess={(token) => setToken(token)} />
               </div>
-
+**/}
               <div className="flex justify-center items-center">
                 <button
                   type="submit"
