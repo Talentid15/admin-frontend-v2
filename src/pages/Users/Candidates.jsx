@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
 
@@ -122,7 +122,7 @@ const CandidateManagement = () => {
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-blue-500 underline"
-                    onClick={(e) => e.stopPropagation()} // Prevent triggering edit mode
+                    onClick={(e) => e.stopPropagation()}
                   >
                     View Resume
                   </a>

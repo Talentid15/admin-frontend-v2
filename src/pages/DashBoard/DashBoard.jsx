@@ -1,4 +1,3 @@
-import React from "react";
 import { Outlet } from "react-router-dom";
 
 import BarChart from "./MultiLineChart";
@@ -8,6 +7,7 @@ import Card from './Card'
 import DashboardGraphs from "./DashboardGraphs ";
 import RecentUser from "./RecentUser";
 import DisplayToDo from "./DisplayToDo";
+import TodoList from "../ToDo/ToDo";
 
 const stats = [
   { title: "Total Users", value: "680/1000", statusColor: "text-green-300", iconColor: "#4CAF50" },
@@ -49,7 +49,7 @@ const DashBoard = () => {
           </div>
           <div className="mt-8 grid grid-cols-1 lg:grid-cols-2 gap-5">
             <div className="flex-[0.5]">
-              <DisplayToDo />
+             <TodoList/>
             </div>
             <div className="flex-[0.5]">
               <RecentUser />

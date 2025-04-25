@@ -1,5 +1,5 @@
 
-const Loader = () => {
+const NewLoader = () => {
     return (
         <div className="fixed inset-0 flex justify-center items-center bg-slate-700/90 z-50 dark:bg-black/70 dark:invert">
             <div className="wrapper">
@@ -15,5 +15,5 @@ const Loader = () => {
     );
 };
 
-export default Loader;
+export default NewLoader;
 

@@ -2,7 +2,6 @@ import  { useState } from "react";
 import { useForm } from "react-hook-form";
 import { FaEnvelope, FaLock, FaEye, FaEyeSlash } from "react-icons/fa"; // Import Eye Icons
 import logo from "../assets/logo.png";
-import { Turnstile } from "@marsidev/react-turnstile";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { useDispatch } from "react-redux";
@@ -10,13 +9,10 @@ import { setUserData } from "../redux/userSlice";
 import { useNavigate } from "react-router-dom";
 
 const Login = () => {
-  const backendUrl = import.meta.env.VITE_BACKEND_URL;
-  const siteKey = import.meta.env.VITE_SITE_KEY;
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [token, setToken] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const [showPassword, setShowPassword] = useState(false); // New state for toggling password
+  const [, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false); 
 
   const {
     register,

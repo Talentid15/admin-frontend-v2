@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import { FaUserCircle, FaSignOutAlt, FaTimes } from "react-icons/fa";
 import { ImInfo } from "react-icons/im";
 import logo from "../assets/logo.png";
