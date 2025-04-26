@@ -6,7 +6,6 @@ import Card from './Card'
 
 import DashboardGraphs from "./DashboardGraphs ";
 import RecentUser from "./RecentUser";
-import DisplayToDo from "./DisplayToDo";
 import TodoList from "../ToDo/ToDo";
 
 const stats = [
@@ -15,6 +14,7 @@ const stats = [
   { title: "Customers", value: "8/20", statusColor: "text-yellow-300", iconColor: "#FFEB3B" },
   { title: "Total Candidates", value: "3/100", statusColor: "text-red-300", iconColor: "#F44336" }
 ];
+
 
 const DashBoard = () => {
  
