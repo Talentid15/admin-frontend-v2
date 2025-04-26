@@ -9,7 +9,7 @@ const RecentUser = () => {
   const navigate = useNavigate();
   const userData = useSelector((state) => state.user.data || {});
   const { token, _id: adminUserId, role } = userData;
-  const API_URL = import.meta.env.VITE_REACT_BACKEND_URL ?? "http://localhost:4000";
+  const API_URL = import.meta.env.VITE_REACT_BACKEND_URL ?? "https://backend.talentid.app";
 
   const [users, setUsers] = useState([]);
   const [formData, setFormData] = useState({
