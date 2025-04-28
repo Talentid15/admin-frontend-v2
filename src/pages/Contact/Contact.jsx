@@ -87,7 +87,7 @@ const UserManagement = () => {
   return (
     <div className="w-full max-w-5xl mx-auto mt-10 p-4 bg-white rounded-xl shadow-lg">
       {/* Refresh & Export Buttons */}
-      <div className="flex justify-between mb-4">
+      {/* <div className="flex justify-between mb-4">
         <button
           onClick={fetchContactUsData}
           className="bg-blue-500 text-white px-4 py-2 rounded-md shadow"
@@ -100,7 +100,7 @@ const UserManagement = () => {
         >
           📥 Export to Excel
         </button>
-      </div>
+      </div> */}
 
       <div className="overflow-auto max-h-[500px] w-full">
         <table className="w-full bg-white rounded-lg min-w-[900px]">

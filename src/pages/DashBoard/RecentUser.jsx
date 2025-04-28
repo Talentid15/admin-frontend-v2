@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import { FaTrash, FaEdit } from "react-icons/fa";
 
@@ -50,7 +50,8 @@ const RecentUser = () => {
       } else {
         const sortedUsers = usersData
           .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
-          .slice(0, 10);
+          .slice(0,10);
+        console.log(sortedUsers)
         setUsers(sortedUsers);
       }
     } catch (error) {
@@ -235,7 +236,7 @@ const RecentUser = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
+    <div className="min-h-screen  flex items-center justify-center p-4">
       <div className="w-full max-w-5xl bg-white rounded-2xl shadow-xl p-6">
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-3xl font-bold text-purple-700">Recent Users</h2>
@@ -290,6 +291,7 @@ const RecentUser = () => {
                 <th className="p-3 text-left">Email</th>
                 <th className="p-3 text-left">Phone</th>
                 <th className="p-3 text-left">Role</th>
+                <th className="p-3 text-left">Document</th>
                 <th className="p-3 text-left">Document Verification</th>
                 <th className="p-3 text-left">Actions</th>
               </tr>
@@ -309,26 +311,30 @@ const RecentUser = () => {
                   <td className="p-3">{user.phone || "N/A"}</td>
                   <td className="p-3">{user.role || "N/A"}</td>
                   <td className="p-3">
+                    {user.documents ? 
+                    <Link to={user.documents} target="_blank">
+                      <img src="https://cdn-icons-png.flaticon.com/128/2258/2258853.png" alt="image"  className="size-5"/>
+                    </Link>
+                      : <img src="https://cdn-icons-png.flaticon.com/128/2782/2782973.png" className="w-5 h-5" />
+                    }</td>
+                  <td className="p-3">
                     <button
                       onClick={() => handleToggleClick(user._id, user.verifiedDocuments)}
-                      className={`relative w-12 h-6 rounded-full transition duration-300 ${
-                        user.verifiedDocuments ? "bg-green-500" : "bg-gray-300"
-                      } ${!isAdmin ? "cursor-not-allowed opacity-50" : ""}`}
+                      className={`relative w-12 h-6 rounded-full transition duration-300 ${user.verifiedDocuments ? "bg-green-500" : "bg-gray-300"
+                        } ${!isAdmin ? "cursor-not-allowed opacity-50" : ""}`}
                       disabled={!isAdmin}
                     >
                       <span
-                        className={`absolute left-1 top-1 w-4 h-4 bg-white rounded-full transition duration-300 ${
-                          user.verifiedDocuments ? "translate-x-6" : "translate-x-0"
-                        }`}
+                        className={`absolute left-1 top-1 w-4 h-4 bg-white rounded-full transition duration-300 ${user.verifiedDocuments ? "translate-x-6" : "translate-x-0"
+                          }`}
                       ></span>
                     </button>
                   </td>
                   <td className="p-3 flex gap-3">
                     <button
                       onClick={() => handleEdit(user)}
-                      className={`text-blue-600 hover:text-blue-800 transition-all ${
-                        !isAdmin ? "cursor-not-allowed opacity-50" : ""
-                      }`}
+                      className={`text-blue-600 hover:text-blue-800 transition-all ${!isAdmin ? "cursor-not-allowed opacity-50" : ""
+                        }`}
                       title="Edit"
                       disabled={!isAdmin}
                     >
@@ -336,9 +342,8 @@ const RecentUser = () => {
                     </button>
                     <button
                       onClick={() => handleDelete(user._id)}
-                      className={`text-red-600 hover:text-red-800 transition-all ${
-                        !isAdmin ? "cursor-not-allowed opacity-50" : ""
-                      }`}
+                      className={`text-red-600 hover:text-red-800 transition-all ${!isAdmin ? "cursor-not-allowed opacity-50" : ""
+                        }`}
                       title="Delete"
                       disabled={!isAdmin}
                     >
@@ -351,7 +356,6 @@ const RecentUser = () => {
           </table>
         </div>
 
-        {/* Vertical cards for small screens */}
         <div className="block md:hidden">
           {users.length === 0 && !isLoading && (
             <p className="text-center text-gray-500">No users found.</p>
@@ -376,33 +380,29 @@ const RecentUser = () => {
                 <span className="text-sm text-gray-600">Document Verification:</span>
                 <button
                   onClick={() => handleToggleClick(user._id, user.verifiedDocuments)}
-                  className={`relative w-12 h-6 rounded-full transition duration-300 ${
-                    user.verifiedDocuments ? "bg-green-500" : "bg-gray-300"
-                  } ${!isAdmin ? "cursor-not-allowed opacity-50" : ""}`}
+                  className={`relative w-12 h-6 rounded-full transition duration-300 ${user.verifiedDocuments ? "bg-green-500" : "bg-gray-300"
+                    } ${!isAdmin ? "cursor-not-allowed opacity-50" : ""}`}
                   disabled={!isAdmin}
                 >
                   <span
-                    className={`absolute left-1 top-1 w-4 h-4 bg-white rounded-full transition duration-300 ${
-                      user.verifiedDocuments ? "translate-x-6" : "translate-x-0"
-                    }`}
+                    className={`absolute left-1 top-1 w-4 h-4 bg-white rounded-full transition duration-300 ${user.verifiedDocuments ? "translate-x-6" : "translate-x-0"
+                      }`}
                   ></span>
                 </button>
               </div>
               <div className="mt-3 flex gap-3">
                 <button
                   onClick={() => handleEdit(user)}
-                  className={`bg-blue-600 text-white px-3 py-1 rounded-lg hover:bg-blue-700 transition-all ${
-                    !isAdmin ? "cursor-not-allowed opacity-50" : ""
-                  }`}
+                  className={`bg-blue-600 text-white px-3 py-1 rounded-lg hover:bg-blue-700 transition-all ${!isAdmin ? "cursor-not-allowed opacity-50" : ""
+                    }`}
                   disabled={!isAdmin}
                 >
                   Edit
                 </button>
                 <button
                   onClick={() => handleDelete(user._id)}
-                  className={`bg-red-600 text-white px-3 py-1 rounded-lg hover:bg-red-700 transition-all ${
-                    !isAdmin ? "cursor-not-allowed opacity-50" : ""
-                  }`}
+                  className={`bg-red-600 text-white px-3 py-1 rounded-lg hover:bg-red-700 transition-all ${!isAdmin ? "cursor-not-allowed opacity-50" : ""
+                    }`}
                   disabled={!isAdmin}
                 >
                   Delete
@@ -423,9 +423,8 @@ const RecentUser = () => {
                   <input
                     type="text"
                     name="fullname"
-                    className={`w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 ${
-                      formErrors.fullname ? "border-red-500" : "border-gray-300"
-                    }`}
+                    className={`w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 ${formErrors.fullname ? "border-red-500" : "border-gray-300"
+                      }`}
                     value={formData.fullname}
                     onChange={handleChange}
                     placeholder="Enter full name"
@@ -439,9 +438,8 @@ const RecentUser = () => {
                   <input
                     type="email"
                     name="email"
-                    className={`w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 ${
-                      formErrors.email ? "border-red-500" : "border-gray-300"
-                    }`}
+                    className={`w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 ${formErrors.email ? "border-red-500" : "border-gray-300"
+                      }`}
                     value={formData.email}
                     onChange={handleChange}
                     placeholder="Enter email"
@@ -453,9 +451,8 @@ const RecentUser = () => {
                   <input
                     type="text"
                     name="phone"
-                    className={`w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 ${
-                      formErrors.phone ? "border-red-500" : "border-gray-300"
-                    }`}
+                    className={`w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 ${formErrors.phone ? "border-red-500" : "border-gray-300"
+                      }`}
                     value={formData.phone}
                     onChange={handleChange}
                     placeholder="Enter phone number (optional)"
@@ -488,9 +485,8 @@ const RecentUser = () => {
                 <button
                   onClick={handleSave}
                   disabled={isLoading}
-                  className={`bg-purple-900 text-white px-4 py-2 rounded-lg hover:bg-purple-800 transition-all ${
-                    isLoading ? "opacity-50 cursor-not-allowed" : ""
-                  }`}
+                  className={`bg-purple-900 text-white px-4 py-2 rounded-lg hover:bg-purple-800 transition-all ${isLoading ? "opacity-50 cursor-not-allowed" : ""
+                    }`}
                 >
                   {isLoading ? "Updating..." : "Update User"}
                 </button>
